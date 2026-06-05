@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>🍽️ Minion Food Guide — Bangkok Team Dinner Finder</title>
+<style>
+  /* =============================================
+     BASE & RESET
+  ============================================= */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple-50:  #faf5ff;
+    --purple-100: #f3e8ff;
+    --purple-200: #e9d5ff;
+    --purple-300: #d8b4fe;
+    --purple-400: #c084fc;
+    --purple-500: #a855f7;
+    --purple-600: #9333ea;
+    --purple-700: #7e22ce;
+    --pink-200:   #fbcfe8;
+    --pink-300:   #f9a8d4;
+    --pink-400:   #f472b6;
+    --blue-200:   #bfdbfe;
+    --green-200:  #bbf7d0;
+    --yellow-200: #fef08a;
+    --orange-200: #fed7aa;
+    --teal-200:   #99f6e4;
+    --red-200:    #fecaca;
+    --text-dark:  #3b0764;
+    --text-mid:   #6b21a8;
+    --text-soft:  #9333ea;
+    --text-muted: #a78bfa;
+    --shadow:     0 4px 20px rgba(168,85,247,0.15);
+    --shadow-sm:  0 2px 8px rgba(168,85,247,0.10);
+    --radius:     16px;
+    --radius-sm:  10px;
+    --radius-xs:  6px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 40%, #fce7f3 100%);
+    min-height: 100vh;
+    color: var(--text-dark);
+    line-height: 1.6;
+  }
+
+  /* =============================================
+     TYPOGRAPHY
+  ============================================= */
+  h1 { font-size: clamp(1.8rem, 5vw, 3rem); }
+  h2 { font-size: clamp(1.3rem, 3vw, 1.8rem); margin-bottom: 1rem; }
+  h3 { font-size: clamp(1rem, 2.5vw, 1.3rem); }
+  p  { font-size: 0.95rem; color: var(--text-mid); }
+
+  /* =============================================
+     LAYOUT
+  ============================================= */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 1.2rem; }
+
+  section { padding: 3rem 0; }
+
+  .section-card {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(8px);
+    border: 1.5px solid var(--purple-200);
+    border-radius: var(--radius);
+    padding: 2rem 2rem 2.5rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--purple-200);
+  }
+
+  /* =============================================
+     HEADER
+  ============================================= */
+  header {
+    background: linear-gradient(135deg, #7e22ce 0%, #9333ea 40%, #c026d3 100%);
+    color: #fff;
+    padding: 3rem 1.2rem 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 999px;
+    padding: 0.3rem 1.1rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    backdrop-filter: blur(4px);
+  }
+  header h1 { font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.2); margin-bottom: 0.4rem; }
+  header .subtitle { font-size: 1.1rem; opacity: 0.9; margin-bottom: 1.5rem; }
+  .header-meta {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .header-meta span {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 999px;
+    padding: 0.25rem 1rem;
+    font-size: 0.85rem;
+    backdrop-filter: blur(4px);
+  }
+  header p.desc { max-width: 640px; margin: 0 auto; opacity: 0.88; font-size: 0.95rem; }
+
+  /* =============================================
+     NAV PILLS
+  ============================================= */
+  .nav-pills {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem;
+    padding: 1.5rem 1.2rem;
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(8px);
+    border-bottom: 1.5px solid var(--purple-200);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-pill {
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--purple-300);
+    background: var(--purple-50);
+    color: var(--text-mid);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-pill:hover {
+    background: var(--purple-500); color: #fff; border-color: var(--purple-500);
+    transform: translateY(-1px);
+  }
+
+  /* =============================================
+     OBJECTIVE
+  ============================================= */
+  .objective-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .objective-item {
+    background: linear-gradient(135deg, var(--purple-50), var(--purple-100));
+    border: 1.5px solid var(--purple-200);
+    border-radius: var(--radius-sm);
+    padding: 1.2rem;
+    display: flex; gap: 0.8rem; align-items: flex-start;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .objective-item:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .obj-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .obj-text { font-size: 0.9rem; color: var(--text-mid); font-weight: 500; }
+
+  /* =============================================
+     WORKFLOW
+  ============================================= */
+  .workflow-steps {
+    display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;
+    position: relative;
+  }
+  .workflow-step {
+    background: linear-gradient(135deg, #fff, var(--purple-50));
+    border: 1.5px solid var(--purple-200);
+    border-radius: var(--radius-sm);
+    padding: 1.2rem 1.4rem;
+    width: 180px;
+    text-align: center;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+  }
+  .workflow-step:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+  .step-num {
+    background: linear-gradient(135deg, var(--purple-500), var(--pink-400));
+    color: #fff;
+    width: 2rem; height: 2rem;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.9rem;
+    margin: 0 auto 0.6rem;
+  }
+  .step-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+  .step-title { font-weight: 700; font-size: 0.9rem; color: var(--text-dark); margin-bottom: 0.3rem; }
+  .step-desc { font-size: 0.78rem; color: var(--text-mid); }
+  .step-arrow {
+    display: flex; align-items: center; font-size: 1.5rem; color: var(--purple-400);
+    margin-top: 1.2rem;
+  }
+  @media (max-width: 600px) { .step-arrow { display: none; } .workflow-step { width: 140px; } }
+
+  /* =============================================
+     TOOLS
+  ============================================= */
+  .tools-grid {
+    display: flex; flex-wrap: wrap; gap: 0.8rem;
+  }
+  .tool-chip {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: linear-gradient(135deg, var(--purple-100), var(--pink-200));
+    border: 1.5px solid var(--purple-200);
+    border-radius: 999px;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.88rem; font-weight: 600; color: var(--text-dark);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+  }
+  .tool-chip:hover { transform: scale(1.05); }
+
+  /* =============================================
+     DATA SOURCES
+  ============================================= */
+  .source-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 1rem; }
+  .source-card {
+    background: linear-gradient(135deg, var(--purple-50), #fff);
+    border: 1.5px solid var(--purple-200);
+    border-radius: var(--radius-sm);
+    padding: 1.2rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .source-num {
+    font-size: 0.7rem; font-weight: 700; color: var(--purple-500);
+    letter-spacing: 0.1em; margin-bottom: 0.4rem;
+  }
+  .source-name { font-weight: 700; font-size: 1rem; color: var(--text-dark); margin-bottom: 0.3rem; }
+  .source-url { font-size: 0.78rem; color: var(--purple-400); word-break: break-all; margin-bottom: 0.5rem; }
+  .source-desc { font-size: 0.85rem; color: var(--text-mid); }
+
+  /* =============================================
+     SHEETS STRUCTURE
+  ============================================= */
+  .columns-grid {
+    display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.2rem;
+  }
+  .col-tag {
+    background: var(--purple-100);
+    border: 1px solid var(--purple-300);
+    border-radius: var(--radius-xs);
+    padding: 0.3rem 0.8rem;
+    font-size: 0.82rem; font-weight: 600; color: var(--text-mid);
+  }
+  .sheet-link-box {
+    background: linear-gradient(135deg, var(--purple-100), var(--blue-200));
+    border: 1.5px solid var(--purple-300);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.2rem;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.8rem;
+  }
+  .sheet-link-box a {
+    color: var(--purple-700); font-weight: 600; font-size: 0.85rem;
+    word-break: break-all;
+  }
+
+  /* =============================================
+     FILTER & SEARCH PANEL
+  ============================================= */
+  #filters {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(8px);
+    border: 1.5px solid var(--purple-200);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+  }
+  .filter-label {
+    font-size: 0.8rem; font-weight: 700; color: var(--text-soft);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .filter-row { margin-bottom: 1.1rem; }
+  .filter-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .filter-btn {
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--purple-300);
+    background: var(--purple-50);
+    color: var(--text-mid);
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover { background: var(--purple-200); }
+  .filter-btn.active {
+    background: linear-gradient(135deg, var(--purple-500), var(--pink-400));
+    color: #fff; border-color: transparent;
+    box-shadow: 0 2px 8px rgba(168,85,247,0.3);
+  }
+  .search-wrap { position: relative; }
+  .search-wrap input {
+    width: 100%; padding: 0.7rem 1rem 0.7rem 2.8rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--purple-300);
+    background: var(--purple-50);
+    font-size: 0.95rem; color: var(--text-dark);
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-wrap input:focus { border-color: var(--purple-500); box-shadow: 0 0 0 3px rgba(168,85,247,0.15); }
+  .search-icon {
+    position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+    font-size: 1rem; pointer-events: none;
+  }
+  .results-count {
+    margin-top: 0.8rem;
+    font-size: 0.85rem; color: var(--text-muted); font-weight: 600;
+  }
+
+  /* =============================================
+     RANDOM SECTION
+  ============================================= */
+  .random-section {
+    background: linear-gradient(135deg, var(--purple-100), var(--pink-200), var(--blue-200));
+    border: 1.5px solid var(--purple-300);
+    border-radius: var(--radius);
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .random-section h3 { margin-bottom: 0.4rem; }
+  .random-section p { margin-bottom: 1.2rem; }
+  .random-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; }
+  .btn-random {
+    padding: 0.7rem 1.6rem;
+    border-radius: 999px;
+    border: none;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-menu {
+    background: linear-gradient(135deg, var(--purple-500), var(--purple-600));
+    color: #fff; box-shadow: 0 4px 14px rgba(168,85,247,0.35);
+  }
+  .btn-restaurant {
+    background: linear-gradient(135deg, #ec4899, #a855f7);
+    color: #fff; box-shadow: 0 4px 14px rgba(236,72,153,0.3);
+  }
+  .btn-random:hover { transform: translateY(-2px) scale(1.03); }
+  .random-result {
+    display: none;
+    background: rgba(255,255,255,0.9);
+    border: 2px solid var(--purple-400);
+    border-radius: var(--radius-sm);
+    padding: 1.5rem;
+    max-width: 480px;
+    margin: 0 auto;
+    text-align: left;
+    animation: fadeIn 0.3s ease;
+    position: relative;
+  }
+  .random-result.show { display: block; }
+  .random-close {
+    position: absolute;
+    top: 0.6rem; right: 0.7rem;
+    background: var(--purple-100);
+    border: 1.5px solid var(--purple-300);
+    border-radius: 50%;
+    width: 1.7rem; height: 1.7rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; cursor: pointer; color: var(--text-mid);
+    font-weight: 700; line-height: 1;
+    transition: all 0.18s;
+  }
+  .random-close:hover { background: var(--purple-300); color: var(--text-dark); }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .random-result h4 { font-size: 1.1rem; color: var(--text-dark); margin-bottom: 0.6rem; }
+  .random-result .ri { font-size: 0.85rem; color: var(--text-mid); margin-bottom: 0.3rem; }
+
+  /* =============================================
+     RANKING TABLE
+  ============================================= */
+  .table-wrap { overflow-x: auto; border-radius: var(--radius-sm); }
+  table {
+    width: 100%; border-collapse: collapse; font-size: 0.88rem;
+    min-width: 600px;
+  }
+  thead tr { background: linear-gradient(135deg, var(--purple-600), #c026d3); color: #fff; }
+  thead th { padding: 0.9rem 1rem; text-align: left; font-weight: 700; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--purple-100); transition: background 0.15s; }
+  tbody tr:hover { background: var(--purple-50); }
+  tbody td { padding: 0.75rem 1rem; vertical-align: middle; }
+  .rank-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2rem; height: 2rem; border-radius: 50%;
+    font-weight: 800; font-size: 0.85rem;
+  }
+  .rank-1 { background: linear-gradient(135deg,#fbbf24,#f59e0b); color: #fff; }
+  .rank-2 { background: linear-gradient(135deg,#94a3b8,#64748b); color: #fff; }
+  .rank-3 { background: linear-gradient(135deg,#cd7c2f,#b45309); color: #fff; }
+  .rank-other { background: var(--purple-100); color: var(--text-mid); }
+  .score-bar-wrap { display: flex; align-items: center; gap: 0.5rem; }
+  .score-bar { height: 8px; border-radius: 999px; background: linear-gradient(90deg, var(--purple-400), var(--pink-400)); min-width: 4px; }
+  .score-num { font-weight: 700; color: var(--text-dark); min-width: 2.2rem; }
+  .star-text { color: #f59e0b; font-weight: 700; }
+  .btn-map {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--purple-500), var(--purple-600));
+    color: #fff; font-size: 0.78rem; font-weight: 600;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: all 0.18s; white-space: nowrap;
+  }
+  .btn-map:hover { transform: scale(1.04); box-shadow: 0 2px 8px rgba(168,85,247,0.4); }
+
+  /* =============================================
+     TOP 3 RECOMMENDATION
+  ============================================= */
+  .top3-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 1.2rem; }
+  .top3-card {
+    border-radius: var(--radius-sm);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .top3-card:hover { transform: translateY(-3px); }
+  .top3-card.rank-gold {
+    background: linear-gradient(135deg,#fffbeb,#fef3c7,#fde68a);
+    border: 2px solid #fbbf24;
+  }
+  .top3-card.rank-silver {
+    background: linear-gradient(135deg,#f8fafc,#f1f5f9,#e2e8f0);
+    border: 2px solid #94a3b8;
+  }
+  .top3-card.rank-bronze {
+    background: linear-gradient(135deg,#fff7ed,#ffedd5,#fed7aa);
+    border: 2px solid #cd7c2f;
+  }
+  .top3-rank-icon { font-size: 2.5rem; position: absolute; top: 1rem; right: 1rem; opacity: 0.25; }
+  .top3-num { font-size: 2.5rem; font-weight: 900; opacity: 0.15; line-height: 1; }
+  .top3-name { font-size: 1.15rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.3rem; }
+  .top3-area { font-size: 0.82rem; color: var(--text-soft); font-weight: 600; margin-bottom: 0.8rem; }
+  .top3-row { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .chip {
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem; font-weight: 600;
+  }
+  .chip-purple { background: var(--purple-200); color: var(--text-mid); }
+  .chip-pink   { background: var(--pink-200); color: #be185d; }
+  .chip-green  { background: var(--green-200); color: #166534; }
+  .chip-yellow { background: var(--yellow-200); color: #92400e; }
+  .chip-blue   { background: var(--blue-200); color: #1e40af; }
+  .chip-orange { background: var(--orange-200); color: #92400e; }
+  .top3-section { margin-top: 0.8rem; font-size: 0.85rem; }
+  .top3-section strong { color: var(--text-dark); }
+  .top3-section p { color: var(--text-mid); }
+  .concern-box {
+    background: rgba(255,255,255,0.6);
+    border-radius: var(--radius-xs);
+    padding: 0.5rem 0.8rem;
+    font-size: 0.82rem; color: #b45309; margin-top: 0.5rem;
+    border-left: 3px solid #f59e0b;
+  }
+
+  /* =============================================
+     COMPARISON TABLE
+  ============================================= */
+  .comparison-note { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+  /* =============================================
+     RESTAURANT CARDS
+  ============================================= */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+    gap: 1.2rem;
+  }
+  .rest-card {
+    background: rgba(255,255,255,0.85);
+    border: 1.5px solid var(--purple-200);
+    border-radius: var(--radius);
+    padding: 1.3rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; flex-direction: column;
+  }
+  .rest-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.6rem; }
+  .card-name { font-weight: 800; font-size: 1rem; color: var(--text-dark); flex: 1; }
+  .card-rating {
+    display: flex; align-items: center; gap: 0.2rem;
+    background: var(--yellow-200);
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem; font-weight: 700; color: #92400e;
+    flex-shrink: 0; margin-left: 0.5rem;
+  }
+  .card-area { font-size: 0.8rem; color: var(--text-soft); font-weight: 600; margin-bottom: 0.5rem; }
+  .card-desc { font-size: 0.82rem; color: var(--text-mid); font-style: italic; margin-bottom: 0.7rem; padding: 0.4rem 0.7rem; background: var(--purple-50); border-left: 3px solid var(--purple-300); border-radius: 0 var(--radius-xs) var(--radius-xs) 0; line-height: 1.5; }
+  .card-badges { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; }
+  .badge {
+    padding: 0.18rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.72rem; font-weight: 700;
+  }
+  .badge-dinner { background: var(--purple-200); color: var(--text-mid); }
+  .badge-group  { background: var(--green-200); color: #166534; }
+  .badge-promo  { background: var(--yellow-200); color: #92400e; }
+  .badge-highrating { background: var(--pink-200); color: #be185d; }
+  .badge-new    { background: var(--teal-200); color: #0f766e; }
+  .card-info { font-size: 0.83rem; color: var(--text-mid); margin-bottom: 0.3rem; display: flex; gap: 0.5rem; }
+  .card-info span:first-child { opacity: 0.7; flex-shrink: 0; }
+  .card-divider { border: none; border-top: 1px solid var(--purple-100); margin: 0.8rem 0; }
+  .card-score-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 0.8rem; }
+  .card-score-label { font-size: 0.78rem; color: var(--text-muted); }
+  .card-score-val {
+    font-weight: 900; font-size: 1.1rem;
+    background: linear-gradient(135deg, var(--purple-600), var(--pink-400));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .card-map-btn {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--purple-500), var(--pink-400));
+    color: #fff; font-size: 0.8rem; font-weight: 600;
+    text-decoration: none; margin-top: 0.8rem;
+    transition: all 0.18s; border: none; cursor: pointer;
+    width: 100%; justify-content: center;
+  }
+  .card-map-btn:hover { transform: scale(1.02); box-shadow: 0 2px 10px rgba(168,85,247,0.35); }
+  .no-results {
+    text-align: center; padding: 3rem; color: var(--text-muted);
+    font-size: 1.1rem; grid-column: 1 / -1;
+  }
+
+  /* =============================================
+     FUTURE SECTION
+  ============================================= */
+  .future-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 1rem; }
+  .future-item {
+    background: linear-gradient(135deg, var(--purple-50), var(--blue-200));
+    border: 1.5px solid var(--purple-200);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.2rem;
+    font-size: 0.88rem; color: var(--text-mid); font-weight: 500;
+    text-align: center;
+  }
+  .future-item .fi { font-size: 1.8rem; margin-bottom: 0.4rem; }
+
+  /* =============================================
+     FOOTER
+  ============================================= */
+  footer {
+    background: linear-gradient(135deg, var(--purple-700), #c026d3);
+    color: #fff;
+    text-align: center;
+    padding: 2.5rem 1.2rem;
+  }
+  footer h3 { margin-bottom: 0.4rem; opacity: 0.9; }
+  footer p  { opacity: 0.7; font-size: 0.85rem; }
+  .footer-divider { width: 60px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 999px; margin: 1rem auto; }
+
+  /* =============================================
+     UTILITY
+  ============================================= */
+  .text-center { text-align: center; }
+  .mb-1 { margin-bottom: 0.5rem; }
+  .mb-2 { margin-bottom: 1rem; }
+  .mt-1 { margin-top: 0.5rem; }
+
+  /* =============================================
+     RESPONSIVE
+  ============================================= */
+  @media (max-width: 768px) {
+    .section-card { padding: 1.2rem 1rem 1.5rem; }
+    .top3-grid { grid-template-columns: 1fr; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .objective-grid { grid-template-columns: 1fr; }
+    .nav-pills { overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; padding: 1rem; }
+    .nav-pill { flex-shrink: 0; }
+  }
+  @media (max-width: 480px) {
+    .workflow-step { width: 120px; padding: 0.8rem; }
+    .step-desc { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="header-inner container">
+    <h1>🍽️ Minion Food Guide 💜</h1>
+    <p class="subtitle">ค้นหาร้านอาหารดินเนอร์ทีม — Bangkok 🥢</p>
+    <div class="header-meta">
+      <span>👥 ทีม 8–12 คน</span>
+      <span>🗺️ กรุงเทพฯ 5 โซน</span>
+      <span>⭐ คัดเฉพาะร้านดีมีคุณภาพ</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ NAV ============ -->
+<nav class="nav-pills">
+  <a href="#finder"      class="nav-pill">🔍 ค้นหาร้านอาหาร</a>
+  <a href="#random"      class="nav-pill">🎲 สุ่มร้าน</a>
+  <a href="#cards"       class="nav-pill">🍜 ร้านอาหารทั้งหมด</a>
+  <a href="#ranking"     class="nav-pill">🏆 Top 10</a>
+  <a href="#top3"        class="nav-pill">⭐ Top 3 แนะนำ</a>
+  <a href="#compare"     class="nav-pill">📋 เปรียบเทียบ</a>
+</nav>
+
+<div class="container">
+
+  <!-- ============ FILTER & SEARCH ============ -->
+  <section id="finder">
+    <h2 class="section-title" style="padding-bottom:0.75rem;border-bottom:2px solid var(--purple-200);margin-bottom:1.5rem;">
+      🔍 ค้นหาร้านอาหาร — Restaurant Finder
+    </h2>
+
+    <div id="filters">
+      <div class="filter-row">
+        <div class="filter-label">📍 Filter by Area</div>
+        <div class="filter-btns" id="area-filters">
+          <button class="filter-btn active" data-area="All">🗺️ All</button>
+          <button class="filter-btn" data-area="Siam">Siam</button>
+          <button class="filter-btn" data-area="Ari">Ari</button>
+          <button class="filter-btn" data-area="Thonglor">Thonglor</button>
+          <button class="filter-btn" data-area="Asok">Asok</button>
+          <button class="filter-btn" data-area="Phrom Phong">Phrom Phong</button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-label">🍽️ Filter by Cuisine</div>
+        <div class="filter-btns" id="cuisine-filters">
+          <button class="filter-btn active" data-cuisine="All">🌟 All</button>
+          <button class="filter-btn" data-cuisine="Thai">🇹🇭 Thai</button>
+          <button class="filter-btn" data-cuisine="Japanese">🍣 Japanese</button>
+          <button class="filter-btn" data-cuisine="Korean">🥩 Korean</button>
+          <button class="filter-btn" data-cuisine="Hotpot">🍲 Hotpot</button>
+          <button class="filter-btn" data-cuisine="Seafood">🦐 Seafood</button>
+          <button class="filter-btn" data-cuisine="Western">🍖 Western</button>
+          <button class="filter-btn" data-cuisine="Fusion">✨ Fusion</button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-label">🔎 Search</div>
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Search by name, area, cuisine, or menu…" />
+        </div>
+      </div>
+      <div class="results-count" id="results-count"></div>
+    </div>
+
+    <!-- ============ CARDS ============ -->
+    <section id="cards">
+      <div class="cards-grid" id="cards-grid"></div>
+    </section>
+
+    <!-- ============ RANDOM ============ -->
+    <div id="random" class="random-section">
+      <h3>🎲 ไม่รู้จะกินอะไรดี? ให้เราสุ่มให้เลย! 🍜</h3>
+      <p>กดปุ่มแล้วค้นพบร้านอาหารทีมดินเนอร์ของคุณแบบสุ่ม ✨</p>
+      <div class="random-btns">
+        <button class="btn-random btn-menu" onclick="randomMenu()">🍜 Random Menu</button>
+        <button class="btn-random btn-restaurant" onclick="randomRestaurant()">🎲 Random Restaurant</button>
+      </div>
+      <div class="random-result" id="random-result"></div>
+    </div>
+  </section>
+
+  <!-- ============ TOP 10 RANKING ============ -->
+  <section id="ranking">
+    <div class="section-card">
+      <h2 class="section-title">🏆 Top 10 อันดับร้านแนะนำ</h2>
+      <p class="mb-2" style="color:var(--text-muted);font-size:0.88rem;">เรียงตามคะแนนรวม — คำนวณจากเรตติ้ง, ความเหมาะสมกับกลุ่ม และความคุ้มค่า</p>
+      <div class="table-wrap">
+        <table id="ranking-table">
+          <thead>
+            <tr>
+              <th>อันดับ</th>
+              <th>ร้านอาหาร</th>
+              <th>โซน</th>
+              <th>ประเภท</th>
+              <th>ช่วงราคา</th>
+              <th>เรตติ้ง</th>
+              <th>คะแนน</th>
+              <th>แผนที่</th>
+            </tr>
+          </thead>
+          <tbody id="ranking-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TOP 3 RECOMMENDATION ============ -->
+  <section id="top3">
+    <div class="section-card">
+      <h2 class="section-title">⭐ Top 3 ร้านแนะนำพิเศษ</h2>
+      <p class="mb-2" style="color:var(--text-muted);font-size:0.88rem;">ตัวเลือกที่ดีที่สุดสำหรับดินเนอร์ทีม — คัดเลือกจากคะแนนรวม, ความจุ และความคุ้มค่า</p>
+      <div class="top3-grid" id="top3-grid"></div>
+    </div>
+  </section>
+
+
+
+</div><!-- /container -->
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <h3>🍽️ Minion Food Guide 💜</h3>
+  <div class="footer-divider"></div>
+  <p>ค้นหาร้านอาหารดินเนอร์ทีม · กรุงเทพฯ</p>
+  <p id="data-status" style="margin-top:0.6rem;font-size:0.8rem;opacity:0.8;">⏳ กำลังโหลดข้อมูลจาก Google Sheets...</p>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+// =============================================
+// FALLBACK / ENRICHED RESTAURANT DATA
+// =============================================
+const fallbackData = [
+  // ---- SIAM ----
+  { name:"Siam Paragon Food Hall", area:"Siam", cuisine:"Thai", openingHours:"10:00–22:00", priceRange:"300–600 บาท/คน", googleRating:4.4, totalScore:84,
+    recommendedMenu:"Pad Thai Goong, Tom Yum Kung, Som Tum Thai, Pla Neung Manao, Khao Pad Goong",
+    promotion:"ลด 10% สำหรับกลุ่ม 8+ คน", googleMapLink:"https://www.google.com/maps/search/Siam+Paragon+Food+Hall+Bangkok",
+    description:"ศูนย์อาหารพรีเมียมใจกลางสยาม รวมร้านไทยชั้นนำหลากสไตล์ ตอบโจทย์กลุ่มใหญ่ที่มีรสนิยมต่างกัน",
+    mainDishes:["Pad Thai Goong","Tom Yum Kung","Som Tum Thai","Pla Neung Manao","Khao Pad Goong","Gaeng Keow Wan Gai"],
+    reason:"ทำเลสะดวก BTS สยาม มีร้านให้เลือกหลากหลาย ตอบโจทย์กลุ่มใหญ่", concern:"อาจแออัดวันหยุด ที่นั่งไม่รับประกัน" },
+
+  { name:"MK Gold Siam Square", area:"Siam", cuisine:"Hotpot", openingHours:"11:00–22:00", priceRange:"350–600 บาท/คน", googleRating:4.3, totalScore:82,
+    recommendedMenu:"MK Sukiyaki Set, Premium Wagyu Beef, Seafood Platter, Pork Belly Set",
+    promotion:"เซ็ตกรุ๊ปพิเศษสำหรับหมู่คณะ", googleMapLink:"https://www.google.com/maps/search/MK+Restaurant+Siam+Square",
+    description:"สุกี้พรีเมียม MK Gold เนื้อคุณภาพดี น้ำซุปเข้มข้น บรรยากาศสบาย เหมาะมื้อค่ำทีมแบบ casual",
+    mainDishes:["MK Sukiyaki Set","Premium Wagyu Beef","Seafood Platter","Pork Belly Shabu","Mixed Mushroom Pot"],
+    reason:"ชาบูสร้างบรรยากาศสังสรรค์ทีม เซ็ตกรุ๊ปคุ้มค่า", concern:"เป็นเชนร้าน อาจรู้สึกไม่พิเศษสำหรับงานสำคัญ" },
+
+  { name:"Greyhound Cafe Siam", area:"Siam", cuisine:"Fusion", openingHours:"10:00–22:00", priceRange:"400–700 บาท/คน", googleRating:4.2, totalScore:79,
+    recommendedMenu:"Spicy Basil Pasta, Grilled Chicken, Pan-fried Salmon, Wagyu Beef Bowl",
+    promotion:"Happy Hour เครื่องดื่มวันธรรมดา", googleMapLink:"https://www.google.com/maps/search/Greyhound+Cafe+Siam+Center+Bangkok",
+    description:"ร้านสไตล์ชิค บรรยากาศทันสมัย เมนูฟิวชั่นไทย-ตะวันตก รสชาติน่าเชื่อถือ เหมาะทีมที่ชอบบรรยากาศสวยงาม",
+    mainDishes:["Spicy Basil Pasta","Grilled Chicken","Pan-fried Salmon","Truffle Mushroom Pasta","Wagyu Beef Bowl"],
+    reason:"บรรยากาศสวย เมนูฟิวชั่นอร่อย เดิน BTS ได้สะดวก", concern:"ราคาค่อนข้างสูง ไม่เหมาะกลุ่มที่ต้องการแชร์จานใหญ่" },
+
+  { name:"Mango Tree Restaurant Siam", area:"Siam", cuisine:"Thai", openingHours:"11:00–22:00", priceRange:"350–650 บาท/คน", googleRating:4.4, totalScore:83,
+    recommendedMenu:"Pad Thai Goong, Tom Yum Talay, Crying Tiger, Gaeng Keow Wan, Gai Yang",
+    promotion:"เซ็ตกรุ๊ปสำหรับ 8 คนขึ้นไป", googleMapLink:"https://www.google.com/maps/search/Mango+Tree+Restaurant+Bangkok",
+    description:"ร้านอาหารไทยคลาสสิกบรรยากาศอบอุ่น เมนูหลากหลาย รสชาติต้นตำรับ เหมาะดินเนอร์ทีมทุกรูปแบบ",
+    mainDishes:["Pad Thai Goong","Tom Yum Talay","Crying Tiger","Gaeng Keow Wan","Pla Neung Manao","Gai Yang"],
+    reason:"ไทยคลาสสิกรสชาติดี บรรยากาศดินเนอร์ทีม ใกล้ BTS", concern:"อาจรอนานในชั่วโมงเร่งด่วน" },
+
+  // ---- ARI ----
+  { name:"Soul Food Mahanakorn", area:"Ari", cuisine:"Thai", openingHours:"17:00–23:00", priceRange:"350–650 บาท/คน", googleRating:4.6, totalScore:90,
+    recommendedMenu:"Crying Tiger, Laab Ped, Pad Kra Pao, Yum Woon Sen, Moo Yang",
+    promotion:"เซ็ตกรุ๊ปพิเศษ (ขั้นต่ำ 8 คน)", googleMapLink:"https://www.google.com/maps/search/Soul+Food+Mahanakorn+Bangkok",
+    description:"ร้านไทยอารมณ์ดี บรรยากาศสวนหย่อมกลางเมือง อาหารรสจัดจ้านแบบดั้งเดิม เหมาะทีมที่ต้องการผ่อนคลาย",
+    mainDishes:["Crying Tiger","Laab Ped","Pad Kra Pao Moo Khai Dao","Yum Woon Sen","Moo Yang","Gai Pad Med Mamuang"],
+    reason:"อาหารไทยแท้รสจัดจ้าน บรรยากาศสวนแบ็คยาร์ดผ่อนคลาย เซ็ตกรุ๊ปราคาดี", concern:"เปิดเฉพาะช่วงเย็น ต้องจองล่วงหน้า" },
+
+  { name:"Supanniga Eating Room Ari", area:"Ari", cuisine:"Thai", openingHours:"11:30–22:00", priceRange:"400–750 บาท/คน", googleRating:4.6, totalScore:88,
+    recommendedMenu:"Gaeng Ped Ped Yang, Moo Cha-om Khai, Pad Ped Pla Duk, Khao Yam Pak Tai",
+    promotion:"เซ็ตกลุ่มราคาพิเศษ", googleMapLink:"https://www.google.com/maps/search/Supanniga+Eating+Room+Ari+Bangkok",
+    description:"ร้านไทยร่วมสมัยสไตล์โฮมคุกกิ้ง ตกแต่งอบอุ่น เมนูสูตรดั้งเดิมจากภาคตะวันออก รสชาติเป็นเอกลักษณ์",
+    mainDishes:["Gaeng Ped Ped Yang","Moo Cha-om Khai","Pad Ped Pla Duk","Khao Yam Pak Tai","Gaeng Som Pla","Yum Makeua Yao"],
+    reason:"ไทยโฮมคุกกิ้งระดับพรีเมียม เมนูเป็นเอกลักษณ์ บรรยากาศดี", concern:"อาจต้องจองล่วงหน้า เมนูบางอย่างรสจัดเกินไป" },
+
+  { name:"The Bookshop Bar & Kitchen", area:"Ari", cuisine:"Western", openingHours:"17:00–23:30", priceRange:"400–800 บาท/คน", googleRating:4.3, totalScore:80,
+    recommendedMenu:"Grilled Salmon, Beef Burger, Pasta Carbonara, Ribeye Steak",
+    promotion:"Happy Hour 17:00–19:00", googleMapLink:"https://www.google.com/maps/search/The+Bookshop+Bar+Kitchen+Ari+Bangkok",
+    description:"บาร์อาหารสไตล์ bookshop ใจกลางอารีย์ บรรยากาศ cozy เหมาะดินเนอร์ทีมแบบผ่อนคลาย",
+    mainDishes:["Grilled Salmon","Beef Burger","Pasta Carbonara","Ribeye Steak","Grilled Chicken"],
+    reason:"บรรยากาศ Cozy ย่านอารีย์ เหมาะทีมชอบ Western สบายๆ", concern:"ตัวเลือกไทยจำกัด เครื่องดื่มราคาสูง" },
+
+  { name:"Ari Tasty Eatery", area:"Ari", cuisine:"Thai", openingHours:"11:00–21:30", priceRange:"200–400 บาท/คน", googleRating:4.4, totalScore:83,
+    recommendedMenu:"Khao Man Gai, Pad Kra Pao Moo Khai Dao, Tom Kha Gai, Pad See Ew",
+    promotion:"ฟรีของหวานสำหรับกลุ่ม 10+ คน", googleMapLink:"https://www.google.com/maps/search/Ari+Thai+Restaurant+Bangkok",
+    description:"ร้านไทยราคาคุ้มค่าย่านอารีย์ เมนูชาวบ้านรสชาติดี เป็นที่นิยมของคนในย่าน",
+    mainDishes:["Khao Man Gai","Pad Kra Pao Moo Khai Dao","Tom Kha Gai","Pad See Ew","Thai Omelette"],
+    reason:"ราคาคุ้มค่า ไทยคลาสสิกรสชาติดี เหมาะกลุ่มประหยัดงบ", concern:"ปิดค่อนข้างเร็ว บรรยากาศ casual เท่านั้น" },
+
+  { name:"Arigato Japanese Ari", area:"Ari", cuisine:"Japanese", openingHours:"11:30–22:00", priceRange:"450–900 บาท/คน", googleRating:4.5, totalScore:87,
+    recommendedMenu:"Sashimi Platter, Wagyu Beef Set, Tuna Sashimi, Salmon Sashimi, Chicken Teriyaki",
+    promotion:"ส่วนลด 10% กลุ่ม อ.–พฤ.", googleMapLink:"https://www.google.com/maps/search/Arigato+Japanese+Restaurant+Ari+Bangkok",
+    description:"ญี่ปุ่นพรีเมียมย่านอารีย์ วัตถุดิบคุณภาพสูงนำเข้าจากญี่ปุ่น มีห้อง private สำหรับกลุ่ม",
+    mainDishes:["Sashimi Platter","Wagyu Beef Set","Tuna Sashimi","Salmon Sashimi","Chicken Teriyaki","Tonkatsu Set"],
+    reason:"ญี่ปุ่นพรีเมียมมีห้อง private วัตถุดิบดี ประทับใจแขก", concern:"ราคาสูง ต้องจองล่วงหน้า" },
+
+  // ---- THONGLOR ----
+  { name:"Thonglor Rooftop Grill", area:"Thonglor", cuisine:"Western", openingHours:"18:00–01:00", priceRange:"600–1200 บาท/คน", googleRating:4.4, totalScore:86,
+    recommendedMenu:"Wagyu Beef, Lamb Chops, Grilled Barramundi, Pork Ribs",
+    promotion:"เครื่องดื่ม welcome ฟรีสำหรับกลุ่ม", googleMapLink:"https://www.google.com/maps/search/Thonglor+Rooftop+Grill+Bangkok",
+    description:"กริลล์บนดาดฟ้าวิวสวยทองหล่อ บรรยากาศหรูหราเหมาะดินเนอร์ฉลองทีมพิเศษ",
+    mainDishes:["Wagyu Beef","Lamb Chops","Grilled Barramundi","Pork Ribs","Grilled Chicken"],
+    reason:"วิวสวยบนดาดฟ้า เหมาะดินเนอร์ฉลองทีม บรรยากาศพิเศษ", concern:"ราคาสูง อาจเกินงบกลุ่มใหญ่" },
+
+  { name:"Yakiniku Like Thonglor", area:"Thonglor", cuisine:"Japanese", openingHours:"11:00–22:00", priceRange:"350–700 บาท/คน", googleRating:4.3, totalScore:82,
+    recommendedMenu:"Premium Wagyu Set, Karubi, Harami, Sirloin Set, Tan Shio",
+    promotion:"เซ็ตกลางวันก่อน 15:00", googleMapLink:"https://www.google.com/maps/search/Yakiniku+Like+Thonglor+Bangkok",
+    description:"ยากินิกุสไตล์ญี่ปุ่น ปิ้งย่างเองที่โต๊ะ แต่ละคนมีเตาของตัวเอง สนุกและ interactive",
+    mainDishes:["Premium Wagyu Set","Karubi","Harami","Sirloin Set","Tan Shio"],
+    reason:"ปิ้งย่าง individual สนุก interactive ทุกคนได้ตามต้องการ", concern:"Individual ไม่ค่อย communal อาจไม่เหมาะทุกกลุ่ม" },
+
+  { name:"Sushi Hiro Thonglor", area:"Thonglor", cuisine:"Japanese", openingHours:"11:30–22:00", priceRange:"500–1000 บาท/คน", googleRating:4.6, totalScore:89,
+    recommendedMenu:"Omakase Sushi Set, Tuna Sashimi, Salmon Sashimi, Chirashi Don, Yellowtail Sashimi",
+    promotion:"แพ็กเกจโอมากาเสะกรุ๊ป", googleMapLink:"https://www.google.com/maps/search/Sushi+Hiro+Thonglor+Bangkok",
+    description:"ซูชิระดับท็อปของทองหล่อ เชฟฝีมือดี วัตถุดิบสดพรีเมียม แพ็กเกจโอมากาเสะกรุ๊ปสุดประทับใจ",
+    mainDishes:["Omakase Sushi Set","Tuna Sashimi","Salmon Sashimi","Chirashi Don","Yellowtail Sashimi"],
+    reason:"ซูชิระดับท็อปของทองหล่อ แพ็กเกจโอมากาเสะสำหรับกลุ่มมอบประสบการณ์สุดพรีเมียม", concern:"ต้องจองล่วงหน้า ราคาค่อนข้างสูง" },
+
+  { name:"The Commons Thonglor", area:"Thonglor", cuisine:"Fusion", openingHours:"08:00–22:00", priceRange:"300–700 บาท/คน", googleRating:4.5, totalScore:85,
+    recommendedMenu:"Craft Burger, Ahi Tuna Bowl, Grilled Chicken Bowl, Flat Bread Pizza",
+    promotion:"โปรโมชั่น vendor หมุนเวียน", googleMapLink:"https://www.google.com/maps/search/The+Commons+Thonglor+Bangkok",
+    description:"Community mall ทองหล่อรวม vendor อาหารชั้นนำ ทุกคนเลือกร้านที่ชอบได้อิสระ บรรยากาศ Trendy",
+    mainDishes:["Craft Burger","Ahi Tuna Bowl","Grilled Chicken Bowl","Flat Bread Pizza","Salmon Bowl"],
+    reason:"ยืดหยุ่นสูง ทุกคนเลือกอาหารที่ชอบ food hall ทันสมัย", concern:"ที่นั่งกลุ่ม 12 คนอาจหายาก ไม่ใช่ sit-down restaurant" },
+
+  { name:"Korean BBQ House Thonglor", area:"Thonglor", cuisine:"Korean", openingHours:"17:00–00:00", priceRange:"400–800 บาท/คน", googleRating:4.4, totalScore:86,
+    recommendedMenu:"Samgyeopsal, Galbi, Bulgogi, Dakgalbi, Chadolbaegi",
+    promotion:"เซ็ตปิ้งย่างไม่อั้น", googleMapLink:"https://www.google.com/maps/search/Korean+BBQ+Thonglor+Bangkok",
+    description:"ปิ้งย่างเกาหลีบรรยากาศสนุกสนาน เนื้อคุณภาพดี เซ็ตไม่อั้นคุ้มค่า เหมาะทีมที่ต้องการสร้างบรรยากาศ",
+    mainDishes:["Samgyeopsal","Galbi","Bulgogi","Dakgalbi","Chadolbaegi"],
+    reason:"ปิ้งย่างที่โต๊ะสร้างบรรยากาศสนุก เซ็ตไม่อั้นคุ้มค่า เชื่อมสัมพันธ์ทีม", concern:"เสื้อผ้าอาจติดกลิ่นควัน ไม่เหมาะงานทางการ" },
+
+  // ---- ASOK ----
+  { name:"Nara Thai Cuisine Asok", area:"Asok", cuisine:"Thai", openingHours:"11:00–22:00", priceRange:"350–700 บาท/คน", googleRating:4.5, totalScore:88,
+    recommendedMenu:"Massaman Curry, Pla Neung Manao, Pad Thai Goong, Tom Yum Goong, Gaeng Keow Wan",
+    promotion:"เครื่องดื่ม welcome ฟรีสำหรับกลุ่ม", googleMapLink:"https://www.google.com/maps/search/Nara+Thai+Cuisine+Terminal+21+Bangkok",
+    description:"ร้านไทยสวยงามใน Terminal 21 อโศก ตกแต่งดี อาหารหลากหลาย เหมาะรับแขกต่างชาติ",
+    mainDishes:["Massaman Curry","Pla Neung Manao","Pad Thai Goong","Tom Yum Goong","Gaeng Keow Wan Gai"],
+    reason:"ติด BTS อโศก ตกแต่งสวย อาหารหลากหลาย เหมาะรับแขกต่างชาติ", concern:"อาจต้องรอนาน ควรจองล่วงหน้า" },
+
+  { name:"Somtum Der Asok", area:"Asok", cuisine:"Thai", openingHours:"11:00–22:00", priceRange:"200–450 บาท/คน", googleRating:4.5, totalScore:85,
+    recommendedMenu:"Som Tum Thai, Gai Yang, Larb Ped, Pad Mee Korat, Nam Tok Moo",
+    promotion:"ไม่มีโปรโมชั่นพิเศษ", googleMapLink:"https://www.google.com/maps/search/Somtum+Der+Bangkok",
+    description:"ร้านส้มตำชื่อดังระดับ Michelin Bib Gourmand อาหารอีสานรสแซ่บแท้ ราคาจับต้องได้",
+    mainDishes:["Som Tum Thai","Gai Yang","Larb Ped","Pad Mee Korat","Nam Tok Moo","Sai Krok Isan"],
+    reason:"ร้านมิชลินราคาจับต้องได้ อาหารอีสานรสแซ่บ ทีมจะประทับใจ", concern:"อาจต้องรอนาน รสชาติเผ็ดสำหรับบางคน" },
+
+  { name:"Shabushi Asok", area:"Asok", cuisine:"Hotpot", openingHours:"11:00–22:00", priceRange:"300–500 บาท/คน", googleRating:4.1, totalScore:78,
+    recommendedMenu:"Premium Shabu Shabu, Wagyu Beef Shabu, Seafood Platter, Pork Belly Set",
+    promotion:"บุฟเฟต์ไม่อั้น", googleMapLink:"https://www.google.com/maps/search/Shabushi+Terminal+21+Asok+Bangkok",
+    description:"ชาบูบุฟเฟต์สายพานใน Terminal 21 ราคาคุ้มค่า มีทั้งซูชิและชาบู เหมาะกลุ่มใหญ่ที่ต้องการประหยัดงบ",
+    mainDishes:["Premium Shabu Shabu","Wagyu Beef Shabu","Seafood Platter","Pork Belly Shabu"],
+    reason:"บุฟเฟต์ไม่อั้นราคาคุ้ม ง่ายสำหรับกลุ่มใหญ่", concern:"สไตล์บุฟเฟต์อาจรู้สึกเร่ง คุณภาพระดับกลาง" },
+
+  { name:"Prego Italian Asok", area:"Asok", cuisine:"Western", openingHours:"12:00–22:30", priceRange:"500–900 บาท/คน", googleRating:4.3, totalScore:81,
+    recommendedMenu:"Wood-fired Pizza, Crab Linguine, Grilled Salmon, Osso Buco, Beef Tenderloin",
+    promotion:"Business Lunch จ.–ศ.", googleMapLink:"https://www.google.com/maps/search/Prego+Italian+Restaurant+Westin+Bangkok",
+    description:"อิตาเลียนระดับโรงแรม Westin บรรยากาศหรูหรา เหมาะรับรองลูกค้าหรือดินเนอร์ทางการ",
+    mainDishes:["Wood-fired Pizza","Crab Linguine","Grilled Salmon","Osso Buco","Beef Tenderloin"],
+    reason:"อิตาเลียนระดับโรงแรม เหมาะดินเนอร์ทางการหรือรับรองลูกค้า", concern:"ราคาสูง บรรยากาศไม่ค่อย group-friendly" },
+
+  { name:"Seafood Market Asok", area:"Asok", cuisine:"Seafood", openingHours:"17:00–22:30", priceRange:"500–1000 บาท/คน", googleRating:4.4, totalScore:85,
+    recommendedMenu:"Fresh Tiger Prawns, Whole Steamed Fish, Steamed Blue Crab, Grilled Barramundi, Oysters",
+    promotion:"ราคาตลาดตามซีฟู้ดสด", googleMapLink:"https://www.google.com/maps/search/Seafood+Market+Restaurant+Bangkok",
+    description:"ซีฟู้ดสดสไตล์ตลาดปลา เลือกซีฟู้ดสดเองแล้วให้ทำตามสไตล์ที่ต้องการ ประสบการณ์ที่จดจำได้",
+    mainDishes:["Fresh Tiger Prawns","Whole Steamed Fish","Steamed Blue Crab","Grilled Barramundi","Oysters"],
+    reason:"เลือกซีฟู้ดสดเองได้ ประสบการณ์ unique จดจำได้นาน", concern:"ราคาบานปลายได้ง่าย ต้องควบคุมงบ" },
+
+  { name:"Meung Korn Seafood Asok", area:"Asok", cuisine:"Seafood", openingHours:"16:00–22:00", priceRange:"400–800 บาท/คน", googleRating:4.2, totalScore:80,
+    recommendedMenu:"Steamed Whole Crab, Salt-Baked Prawns, Grilled Squid, Tom Yum Talay, Pla Neung Manao",
+    promotion:"โปรโมชั่นซีฟู้ดตามฤดูกาล", googleMapLink:"https://www.google.com/maps/search/Seafood+Restaurant+Asok+Bangkok",
+    description:"ซีฟู้ดราคาดีใกล้ BTS อโศก โต๊ะใหญ่รองรับกลุ่มได้สบาย อาหารทะเลสดใหม่",
+    mainDishes:["Steamed Whole Crab","Salt-Baked Prawns","Grilled Squid","Tom Yum Talay","Pla Neung Manao"],
+    reason:"ซีฟู้ดราคาดีใกล้ BTS โต๊ะใหญ่รองรับกลุ่ม 10–12 คน", concern:"ตกแต่งค่อนข้างเก่า ที่จอดรถยาก" },
+
+  // ---- PHROM PHONG ----
+  { name:"Bo.lan Phrom Phong", area:"Phrom Phong", cuisine:"Thai", openingHours:"18:00–22:00", priceRange:"1200–2000 บาท/คน", googleRating:4.7, totalScore:93,
+    recommendedMenu:"Royal Thai Tasting Menu, Heritage Gaeng Kua, Miang Kham, Khao Tang Na Tang",
+    promotion:"Chef's Table สำหรับกลุ่ม (จองล่วงหน้า)", googleMapLink:"https://www.google.com/maps/search/Bolan+Restaurant+Phrom+Phong+Bangkok",
+    description:"ร้านไทยมรดกระดับ Michelin Star บรรยากาศหรูหราเงียบสงบ วัตถุดิบดั้งเดิมหายาก สุดยอดแห่งอาหารไทยโบราณ",
+    mainDishes:["Royal Thai Tasting Menu","Heritage Gaeng Kua","Miang Kham","Khao Tang Na Tang","Pla Kapong Neung Manao"],
+    reason:"หนึ่งในร้านอาหารไทยที่ดีที่สุดในกรุงเทพฯ วัตถุดิบมรดกทางวัฒนธรรม รสชาติล้ำเลิศ บรรยากาศหรูหรา", concern:"ราคาสูงมาก เปิดเฉพาะมื้อเย็น ต้องจองล่วงหน้าหลายสัปดาห์" },
+
+  { name:"Guu Izakaya Phrom Phong", area:"Phrom Phong", cuisine:"Japanese", openingHours:"17:30–23:00", priceRange:"400–800 บาท/คน", googleRating:4.5, totalScore:87,
+    recommendedMenu:"Chicken Karaage, Yakitori Platter, Grilled Pork Belly, Gyoza, Okonomiyaki",
+    promotion:"เซ็ตอิซากายะสำหรับกลุ่ม", googleMapLink:"https://www.google.com/maps/search/Guu+Izakaya+Phrom+Phong+Bangkok",
+    description:"อิซากายะสไตล์ญี่ปุ่นแท้ บรรยากาศสนุกสนาน จานแชร์หลากหลาย เหมาะทีมที่ต้องการสร้างความสนิทสนม",
+    mainDishes:["Chicken Karaage","Yakitori Platter","Grilled Pork Belly","Gyoza","Takoyaki","Okonomiyaki"],
+    reason:"อิซากายะบรรยากาศสนุก จานแชร์หลากหลาย เชื่อมสัมพันธ์ทีมได้ดี", concern:"เสียงดัง อาจต้องจองพื้นที่ private สำหรับกลุ่มที่ต้องการสงบ" },
+
+  { name:"Emquartier Food Hall", area:"Phrom Phong", cuisine:"Fusion", openingHours:"10:00–22:00", priceRange:"250–600 บาท/คน", googleRating:4.3, totalScore:79,
+    recommendedMenu:"Japanese Ramen, Thai Basil Fried Rice, Korean Bibimbap, Grilled Salmon Bowl",
+    promotion:"โปรโมชั่น vendor ต่างๆ", googleMapLink:"https://www.google.com/maps/search/EmQuartier+Food+Hall+Bangkok",
+    description:"Food Hall พรีเมียมใน EmQuartier รวม vendor ชั้นนำทั้งไทยและนานาชาติ ทุกคนเลือกได้อิสระ",
+    mainDishes:["Japanese Ramen","Thai Basil Fried Rice","Korean Bibimbap","Grilled Salmon Bowl","Pad Thai"],
+    reason:"ยืดหยุ่นสูง ทุกคนเลือกอาหารที่ชอบ ราคาหลากหลาย", concern:"ที่นั่งกลุ่ม 12 คนอาจหายาก ไม่ใช่ sit-down restaurant" },
+
+  { name:"Kalpapruek Phrom Phong", area:"Phrom Phong", cuisine:"Thai", openingHours:"11:00–21:30", priceRange:"300–600 บาท/คน", googleRating:4.4, totalScore:83,
+    recommendedMenu:"Gaeng Kiew Wan Gai, Pad See Ew, Khao Pad Sapparod, Laab Ped, Tom Kha Gai",
+    promotion:"สิทธิพิเศษวันเกิด", googleMapLink:"https://www.google.com/maps/search/Kalpapruek+Restaurant+Bangkok",
+    description:"ร้านไทยมรดกบรรยากาศอบอุ่น ตกแต่งสไตล์ไทยคลาสสิก อาหารคุณภาพสม่ำเสมอ ราคาสมเหตุสมผล",
+    mainDishes:["Gaeng Kiew Wan Gai","Pad See Ew","Khao Pad Sapparod","Laab Ped","Tom Kha Gai"],
+    reason:"ไทยมรดกบรรยากาศอบอุ่น คุณภาพสม่ำเสมอ เหมาะทุกกลุ่ม", concern:"ปิดค่อนข้างเร็ว บริการมื้อเย็นราบรื่นกว่า" },
+
+  { name:"Ristorante Bacco Phrom Phong", area:"Phrom Phong", cuisine:"Western", openingHours:"18:00–23:00", priceRange:"600–1100 บาท/คน", googleRating:4.6, totalScore:88,
+    recommendedMenu:"Black Truffle Tagliatelle, Bistecca Fiorentina, Grilled Sea Bass, Risotto al Funghi",
+    promotion:"Wine Pairing Menu", googleMapLink:"https://www.google.com/maps/search/Ristorante+Bacco+Bangkok",
+    description:"อิตาเลียน fine dining ย่านพร้อมพงษ์ บรรยากาศโรแมนติก wine list ดีเยี่ยม เหมาะดินเนอร์สำคัญ",
+    mainDishes:["Black Truffle Tagliatelle","Bistecca Fiorentina","Grilled Sea Bass","Risotto al Funghi","Beef Tenderloin"],
+    reason:"อิตาเลียน fine dining ย่านพร้อมพงษ์ Wine pairing เพิ่มความพิเศษให้ทีม", concern:"ต้องจองล่วงหน้า ราคาสูง" }
+];
+
+// =============================================
+// RUNTIME DATA + LIVE GOOGLE SHEETS FETCH
+// =============================================
+let restaurants = [...fallbackData];
+
+// Apps Script Web App URL — JSON API (Real-Time)
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzGiRCs_W0fStiZf2hOsV0RPVzhBD386eyRL_nMP_DVo3okPItzgnFMRnMKSV0FHtWPow/exec';
+
+function splitCSVLine(line) {
+  const res = []; let cur = ''; let inQ = false;
+  for (const ch of line) {
+    if (ch === '"') { inQ = !inQ; }
+    else if (ch === ',' && !inQ) { res.push(cur); cur = ''; }
+    else cur += ch;
+  }
+  res.push(cur);
+  return res;
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = splitCSVLine(lines[0]).map(h => h.trim().replace(/^"|"$/g, ''));
+  return lines.slice(1).map(line => {
+    const vals = splitCSVLine(line);
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = (vals[i] || '').trim().replace(/^"|"$/g, ''); });
+    return obj;
+  }).filter(r => r['Restaurant Name'] && r['Restaurant Name'].trim());
+}
+
+function mergeRow(row) {
+  const fb = fallbackData.find(r =>
+    r.name.toLowerCase().trim() === (row['Restaurant Name'] || '').toLowerCase().trim()
+  );
+  return {
+    name:            row['Restaurant Name']  || fb?.name || '',
+    area:            row['Area']             || fb?.area || '',
+    cuisine:         row['Cuisine Type']     || fb?.cuisine || '',
+    openingHours:    row['Opening Hours']    || fb?.openingHours || '',
+    priceRange:      row['Price Range']      || fb?.priceRange || '',
+    googleRating:    parseFloat(row['Google Rating']) || fb?.googleRating || 0,
+    recommendedMenu: row['Recommended Menu'] || fb?.recommendedMenu || '',
+    promotion:       row['Promotion']        || fb?.promotion || '',
+    googleMapLink:   row['Google Map Link']  || fb?.googleMapLink || '#',
+    totalScore:      fb?.totalScore  || 80,
+    description:     fb?.description || '',
+    mainDishes:      fb?.mainDishes  || [],
+    reason:          fb?.reason      || '',
+    concern:         fb?.concern     || ''
+  };
+}
+
+async function loadSheetsData() {
+  const statusEl = document.getElementById('data-status');
+  try {
+    // Fetch JSON from Apps Script Web App
+    const resp = await fetch(APPS_SCRIPT_URL, { cache: 'no-cache' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const rows = await resp.json();
+    if (!Array.isArray(rows) || !rows.length) throw new Error('ไม่มีข้อมูลในชีต');
+    const merged = rows.map(mergeRow).filter(r => r.name && r.area);
+    if (!merged.length) throw new Error('parse ไม่สำเร็จ');
+    restaurants = merged;
+    if (statusEl) statusEl.innerHTML =
+      `✅ <strong>Live Data</strong> จาก Google Sheets · ${restaurants.length} ร้าน · อัปเดต ${new Date().toLocaleTimeString('th-TH')}`;
+    renderAll();
+  } catch (e) {
+    console.warn('Apps Script fetch failed:', e.message);
+    restaurants = [...fallbackData];
+    if (statusEl) statusEl.innerHTML = `ℹ️ ใช้ข้อมูลสำรอง (${e.message})`;
+    renderAll();
+  }
+}
+
+// =============================================
+// MENU POOL — เฉพาะเมนูหลักจาก mainDishes
+// =============================================
+function buildMenuPool() {
+  const pool = [];
+  restaurants.forEach(r => {
+    const dishes = (r.mainDishes && r.mainDishes.length)
+      ? r.mainDishes
+      : r.recommendedMenu.split(',').map(d => d.trim());
+    dishes.forEach(dish => pool.push({ dish: dish.trim(), restaurant: r }));
+  });
+  return pool;
+}
+
+// =============================================
+// STATE
+// =============================================
+let activeArea    = 'All';
+let activeCuisine = 'All';
+let searchQuery   = '';
+
+function getFiltered() {
+  return restaurants.filter(r => {
+    const matchArea    = activeArea    === 'All' || r.area    === activeArea;
+    const matchCuisine = activeCuisine === 'All' || r.cuisine === activeCuisine;
+    const q = searchQuery.toLowerCase();
+    const matchSearch  = !q ||
+      r.name.toLowerCase().includes(q) ||
+      r.area.toLowerCase().includes(q) ||
+      r.cuisine.toLowerCase().includes(q) ||
+      (r.recommendedMenu || '').toLowerCase().includes(q) ||
+      (r.description || '').toLowerCase().includes(q);
+    return matchArea && matchCuisine && matchSearch;
+  });
+}
+
+// =============================================
+// RENDER CARDS
+// =============================================
+function renderCards() {
+  const filtered = getFiltered();
+  const grid = document.getElementById('cards-grid');
+  document.getElementById('results-count').textContent =
+    `แสดง ${filtered.length} จาก ${restaurants.length} ร้านอาหาร 🍽️`;
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="no-results">😔 ไม่พบร้านอาหาร ลองเปลี่ยนฟิลเตอร์ดูนะคะ!</div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(r => `
+    <div class="rest-card">
+      <div class="card-top">
+        <div class="card-name">${r.name}</div>
+        <div class="card-rating">⭐ ${r.googleRating}</div>
+      </div>
+      <div class="card-area">📍 ${r.area} · ${r.cuisine}</div>
+      <div class="card-badges">
+        <span class="badge badge-dinner">🍽️ เหมาะดินเนอร์</span>
+        <span class="badge badge-group">👥 รองรับกลุ่ม</span>
+        ${r.promotion && r.promotion !== 'None currently' && r.promotion !== 'ไม่มีโปรโมชั่นพิเศษ' ? '<span class="badge badge-promo">🎁 มีโปรโมชั่น</span>' : ''}
+        ${r.googleRating >= 4.5 ? '<span class="badge badge-highrating">💜 เรตติ้งสูง</span>' : ''}
+      </div>
+      ${r.description ? `<div class="card-desc">${r.description}</div>` : ''}
+      <div class="card-info"><span>⏰</span><span>${r.openingHours}</span></div>
+      <div class="card-info"><span>💰</span><span>${r.priceRange}</span></div>
+      <div class="card-info"><span>👥</span><span>เหมาะสำหรับ 8–12 คน</span></div>
+      <hr class="card-divider"/>
+      <div class="card-info"><span>🥢</span><span>${r.recommendedMenu}</span></div>
+      <div class="card-info"><span>🎁</span><span>${r.promotion}</span></div>
+      <div class="card-score-row">
+        <span class="card-score-label">คะแนนรวม</span>
+        <span class="card-score-val">${r.totalScore}</span>
+      </div>
+      <a href="${r.googleMapLink}" target="_blank" class="card-map-btn">🗺️ เปิดใน Google Maps</a>
+    </div>
+  `).join('');
+}
+
+// =============================================
+// RENDER TOP 10
+// =============================================
+function renderRanking() {
+  const top10 = [...restaurants].sort((a, b) => b.totalScore - a.totalScore).slice(0, 10);
+  document.getElementById('ranking-tbody').innerHTML = top10.map((r, i) => {
+    const rank = i + 1;
+    const rc = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+    return `
+      <tr>
+        <td><span class="rank-badge ${rc}">${rank}</span></td>
+        <td><strong>${r.name}</strong></td>
+        <td><span class="chip chip-purple">${r.area}</span></td>
+        <td>${r.cuisine}</td>
+        <td>${r.priceRange}</td>
+        <td class="star-text">⭐ ${r.googleRating}</td>
+        <td>
+          <div class="score-bar-wrap">
+            <div class="score-bar" style="width:${Math.round(r.totalScore * 0.8)}px"></div>
+            <span class="score-num">${r.totalScore}</span>
+          </div>
+        </td>
+        <td><a href="${r.googleMapLink}" target="_blank" class="btn-map">🗺️ แผนที่</a></td>
+      </tr>`;
+  }).join('');
+}
+
+// =============================================
+// RENDER TOP 3
+// =============================================
+function renderTop3() {
+  const top3 = [...restaurants].sort((a, b) => b.totalScore - a.totalScore).slice(0, 3);
+  const classes = ['rank-gold', 'rank-silver', 'rank-bronze'];
+  const icons   = ['🥇', '🥈', '🥉'];
+  const labels  = ['#1 อันดับ 1 ดีที่สุด', '#2 รองชนะเลิศ', '#3 ตัวเลือกยอดเยี่ยม'];
+  document.getElementById('top3-grid').innerHTML = top3.map((r, i) => `
+    <div class="top3-card ${classes[i]}">
+      <div class="top3-rank-icon">${icons[i]}</div>
+      <div class="top3-num">${i + 1}</div>
+      <div class="top3-name">${icons[i]} ${r.name}</div>
+      <div class="top3-area">${labels[i]} · 📍 ${r.area}</div>
+      <div class="top3-row">
+        <span class="chip chip-purple">${r.cuisine}</span>
+        <span class="chip chip-yellow">⭐ ${r.googleRating}</span>
+        <span class="chip chip-green">คะแนน: ${r.totalScore}</span>
+      </div>
+      <div class="top3-row">
+        <span class="chip chip-blue">💰 ${r.priceRange}</span>
+        <span class="chip chip-orange">⏰ ${r.openingHours}</span>
+      </div>
+      ${r.description ? `<div class="top3-section"><p style="font-style:italic;color:var(--text-soft)">"${r.description}"</p></div>` : ''}
+      <div class="top3-section"><strong>🥢 เมนูแนะนำ</strong><p>${r.recommendedMenu}</p></div>
+      <div class="top3-section"><strong>💡 ทำไมถึงเหมาะกับทีม</strong><p>${r.reason}</p></div>
+      <div class="concern-box">⚠️ ${r.concern}</div>
+      <div style="margin-top:1rem;">
+        <a href="${r.googleMapLink}" target="_blank" class="btn-map" style="padding:0.5rem 1.2rem;font-size:0.85rem;">🗺️ ดูบน Google Maps</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+// =============================================
+// RANDOM
+// =============================================
+function closeRandom() {
+  const box = document.getElementById('random-result');
+  box.className = 'random-result';
+  box.innerHTML = '';
+}
+
+function randomMenu() {
+  const pool = buildMenuPool();
+  if (!pool.length) return;
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  const r = pick.restaurant;
+  const box = document.getElementById('random-result');
+  box.className = 'random-result show';
+  box.innerHTML = `
+    <button class="random-close" onclick="closeRandom()" title="ปิด">✕</button>
+    <h4>🍜 สุ่มเมนูได้: <strong>${pick.dish}</strong></h4>
+    <div class="ri">🏪 จากร้าน: <strong>${r.name}</strong></div>
+    <div class="ri">📍 ${r.area} &nbsp;|&nbsp; 🍽️ ${r.cuisine} &nbsp;|&nbsp; ⭐ ${r.googleRating}</div>
+    <div class="ri">💰 ${r.priceRange}</div>
+    ${r.description ? `<div class="ri" style="margin-top:0.5rem;padding:0.5rem 0.7rem;background:var(--purple-50);border-radius:var(--radius-xs);border-left:3px solid var(--purple-400);font-style:italic;">💬 ${r.description}</div>` : ''}
+    <div style="margin-top:0.8rem">
+      <a href="${r.googleMapLink}" target="_blank" class="btn-map">🗺️ ดูบน Google Maps</a>
+    </div>`;
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function randomRestaurant() {
+  const r = restaurants[Math.floor(Math.random() * restaurants.length)];
+  const box = document.getElementById('random-result');
+  box.className = 'random-result show';
+  box.innerHTML = `
+    <button class="random-close" onclick="closeRandom()" title="ปิด">✕</button>
+    <h4>🎲 ร้านที่สุ่มได้: <strong>${r.name}</strong></h4>
+    <div class="ri">📍 ${r.area} &nbsp;|&nbsp; 🍽️ ${r.cuisine} &nbsp;|&nbsp; ⭐ ${r.googleRating}</div>
+    <div class="ri">⏰ ${r.openingHours} &nbsp;|&nbsp; 💰 ${r.priceRange}</div>
+    ${r.description ? `<div class="ri" style="margin-top:0.5rem;padding:0.5rem 0.7rem;background:var(--purple-50);border-radius:var(--radius-xs);border-left:3px solid var(--purple-400);font-style:italic;">💬 ${r.description}</div>` : ''}
+    <div class="ri">🥢 ${r.recommendedMenu}</div>
+    <div class="ri">🎁 ${r.promotion}</div>
+    <div class="ri">📊 คะแนน: <strong>${r.totalScore}</strong></div>
+    <div style="margin-top:0.8rem">
+      <a href="${r.googleMapLink}" target="_blank" class="btn-map">🗺️ ดูบน Google Maps</a>
+    </div>`;
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// =============================================
+// RENDER ALL + EVENTS + INIT
+// =============================================
+function renderAll() { renderCards(); renderRanking(); renderTop3(); }
+
+document.getElementById('area-filters').addEventListener('click', e => {
+  if (!e.target.dataset.area) return;
+  activeArea = e.target.dataset.area;
+  document.querySelectorAll('#area-filters .filter-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  renderCards();
+});
+document.getElementById('cuisine-filters').addEventListener('click', e => {
+  if (!e.target.dataset.cuisine) return;
+  activeCuisine = e.target.dataset.cuisine;
+  document.querySelectorAll('#cuisine-filters .filter-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  renderCards();
+});
+document.getElementById('search-input').addEventListener('input', e => {
+  searchQuery = e.target.value;
+  renderCards();
+});
+
+// Load live data from Google Sheets, fallback to local data
+loadSheetsData();
+</script>
+</body>
+</html>

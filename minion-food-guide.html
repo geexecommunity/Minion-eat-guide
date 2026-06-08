@@ -607,31 +607,6 @@
   }
 
   /* =============================================
-     CARD IMAGE
-  ============================================= */
-  .card-img-wrap {
-    margin: -1.3rem -1.3rem 0.9rem;
-    border-radius: var(--radius) var(--radius) 0 0;
-    overflow: hidden;
-    height: 160px;
-    background: var(--purple-100);
-    position: relative;
-  }
-  .card-img {
-    width: 100%; height: 100%;
-    object-fit: cover; display: block;
-    transition: transform 0.3s ease;
-  }
-  .rest-card:hover .card-img { transform: scale(1.05); }
-  .card-img-label {
-    position: absolute; bottom: 6px; right: 8px;
-    background: rgba(0,0,0,0.45);
-    color: #fff; font-size: 0.72rem;
-    padding: 2px 7px; border-radius: 20px;
-    backdrop-filter: blur(4px);
-  }
-
-  /* =============================================
      PRICE FILTER
   ============================================= */
   .price-legend {
@@ -787,33 +762,6 @@
      JAVASCRIPT
 ============================================================ -->
 <script>
-// =============================================
-// RESTAURANT IMAGES — cuisine-mapped Unsplash pool
-// =============================================
-const CUISINE_IMAGES = {
-  Thai:     ['1562802378-063ec186a863','1455619452474-d2be8b1e70cd','1547592180-85f173990554','1601050690597-df0568f70950','1516714435131-44d6b64dc6a2'],
-  Japanese: ['1579871494447-9811cf80d66c','1553621042-f6e147245754','1617196034183-421b4040ed20','1611143669185-af224c5e3252'],
-  Korean:   ['1580822184713-fc5400e7fe10','1498654896293-37aacf113fd9'],
-  Western:  ['1414235077428-338989a2e8c0','1565299624946-b28f40a0ae38','1504674900247-0877df9cc836','1567620905732-2d1ec7ab7445'],
-  Seafood:  ['1559737558-2f5a35f4523b','1565958011703-44f9829ba187'],
-  Hotpot:   ['1569050467447-ce54b3bbc37d','1603360946369-dc9bb6258143'],
-  Fusion:   ['1493770348161-369560ae357d','1565557623262-b51c2513a641'],
-  Cafe:     ['1509042239860-f550ce710b93','1445116572660-236099ec97a0'],
-};
-const DEFAULT_IMG_ID = '1567620905732-2d1ec7ab7445';
-
-function nameHash(s) {
-  let h = 0;
-  for (const c of s) h = (h * 31 + c.charCodeAt(0)) & 0xffff;
-  return h;
-}
-
-function getRestaurantImage(r) {
-  const pool = CUISINE_IMAGES[r.cuisine] || [DEFAULT_IMG_ID];
-  const id   = pool[nameHash(r.name) % pool.length];
-  return `https://images.unsplash.com/photo-${id}?w=480&h=220&fit=crop&auto=format&q=70`;
-}
-
 function getMinPrice(priceRange) {
   const m = (priceRange || '').match(/(\d+)/);
   return m ? parseInt(m[1]) : 0;
@@ -1143,11 +1091,6 @@ function renderCards() {
   }
   grid.innerHTML = filtered.map(r => `
     <div class="rest-card">
-      <div class="card-img-wrap">
-        <img class="card-img" src="${getRestaurantImage(r)}" alt="${r.name}" loading="lazy"
-             onerror="this.parentElement.style.display='none'">
-        <span class="card-img-label">${r.cuisine}</span>
-      </div>
       <div class="card-top">
         <div class="card-name">${r.name}</div>
         <div class="card-rating">⭐ ${r.googleRating}</div>
